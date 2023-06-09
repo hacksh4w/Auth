@@ -38,6 +38,7 @@ const registerUser = asyncHandler(async (req,res) => {
             _id : user.id, 
             name : user.name,
             email: user.email,
+            token : generateToken(user._id) //here, becuz when u register automatically logged in aanu, so enthaylum JWT token venam sooo
         })
     } else  {
         res.sendStatus(400)
@@ -57,6 +58,7 @@ const loginUser = asyncHandler(async (req,res) => {
             _id : user.id, 
             name : user.name,
             email: user.email,
+            token : generateToken(user._id)
         })
     } else {
         res.sendStatus(400)
@@ -71,6 +73,12 @@ const getMe = asyncHandler(async (req,res) => {
     res.json({message : 'Display User Data'})
 })
 
+// Generate JWT
+const generateToken = (id) => {
+    return jwt.sign({id }, process.env.JWT_SECRET, {
+    expiresIn : '30d'
+    })
+}
 module.exports = {
     registerUser, loginUser, getMe
 }
